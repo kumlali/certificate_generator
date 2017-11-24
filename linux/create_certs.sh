@@ -18,7 +18,7 @@ OPENSSL=openssl
 KEYTOOL=keytool
 
 # The password to be used in all key & stores.
-PASSWORD=pa$$wOrD
+PASSWORD=PaSsw0rD
 
 # Alias for PKCS12 and JKS key store.
 DOMAIN_ALIAS=${RANDOM}

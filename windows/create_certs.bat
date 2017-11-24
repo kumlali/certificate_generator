@@ -19,7 +19,7 @@ rem KEYTOOL=keytool can be used.
 set KEYTOOL=keytool
 
 rem The password to be used in all key & stores.
-set PASSWORD=pa$$wOrD
+set PASSWORD=PaSsw0rD
 
 rem Alias for PKCS12 and JKS key store.
 set DOMAIN_ALIAS=%RANDOM%
