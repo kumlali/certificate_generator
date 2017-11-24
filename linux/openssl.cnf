@@ -1,0 +1,257 @@
+########################################################################
+#
+# OpenSSL configuration file.
+#
+########################################################################
+# Based on https://jamielinux.com/docs/openssl-certificate-authority/introduction.html
+########################################################################
+ 
+# Establish working directory.
+dir                    = .
+
+# ----------------------------------------------------------------------
+# The [ ca ] section is mandatory. Here we tell OpenSSL to use the 
+# options from the [ CA_default ] section.
+#
+# `man ca`
+# ----------------------------------------------------------------------
+[ ca ]
+default_ca             = CA_default
+
+
+# ----------------------------------------------------------------------
+# The [ CA_default ] section contains a range of defaults. Make sure 
+# you declare the directory you chose earlier (c:\root\ca).
+# ----------------------------------------------------------------------
+[ CA_default ]
+# Directory and file locations.
+certs                  = $dir/certs
+crl_dir                = $dir/crl
+new_certs_dir          = $dir/newcerts
+database               = $dir/index.txt
+serial                 = $dir/serial
+RANDFILE               = $dir/.rand
+
+# The root key and root certificate.
+private_key            = $dir/ca/ca.key.pem
+certificate            = $dir/ca/ca.cert.pem
+
+# For certificate revocation lists.
+crlnumber              = $dir/crlnumber
+crl                    = $dir/crl/ca.crl.pem
+crl_extensions         = crl_ext
+default_crl_days       = 30
+
+# SHA-1 is deprecated, so use SHA-2 instead.
+default_md             = sha256
+
+name_opt               = ca_default
+cert_opt               = ca_default
+default_days           = 18250
+preserve               = no
+email_in_dn            = no
+policy                 = policy_strict
+
+
+# ----------------------------------------------------------------------
+# We値l apply policy_strict for all root CA signatures, as the root CA 
+# is only being used to create intermediate CAs.
+#
+# The root CA should only sign intermediate certificates that match.
+# See the POLICY FORMAT section of `man ca`.
+# ----------------------------------------------------------------------
+[ policy_strict ]
+countryName             = match
+stateOrProvinceName     = match
+organizationName        = match
+organizationalUnitName  = optional
+commonName              = supplied
+emailAddress            = optional
+
+
+# ----------------------------------------------------------------------
+# We値l apply policy_loose for all intermediate CA signatures, as the 
+# intermediate CA is signing server and client certificates that may 
+# come from a variety of third-parties.
+#
+# Allow the intermediate CA to sign a more diverse range of certificates.
+# See the POLICY FORMAT section of the `ca` man page.
+# ----------------------------------------------------------------------
+[ policy_loose ]
+countryName             = optional
+stateOrProvinceName     = optional
+localityName            = optional
+organizationName        = optional
+organizationalUnitName  = optional
+commonName              = supplied
+emailAddress            = optional
+
+
+# ----------------------------------------------------------------------
+# Options from the [ req ] section are applied when creating 
+# certificates or certificate signing requests.
+#
+# Options for the `req` tool (`man req`).
+# ----------------------------------------------------------------------
+[ req ]
+default_bits           = 2048      # Size of keys
+default_md             = sha256    # SHA-1 is deprecated, so use SHA-2 instead.
+string_mask            = utf8only  # permitted characters
+distinguished_name     = req_distinguished_name
+x509_extensions        = v3_ca     # Extension to add when the -x509 option is used.
+
+
+# ----------------------------------------------------------------------
+# The [ req_distinguished_name ] section declares the information 
+# normally required in a certificate signing request. You can 
+# optionally specify some defaults.
+# ----------------------------------------------------------------------
+[ req_distinguished_name ]
+# Variable name           Prompt string
+#---------------------    ----------------------------------
+0.organizationName      = Organization Name (company)
+organizationalUnitName  = Organizational Unit Name (department, division)
+emailAddress            = Email Address
+emailAddress_max        = 40
+localityName            = Locality Name (city, district)
+stateOrProvinceName     = State or Province Name (full name)
+countryName             = Country Name (2 letter code)
+countryName_min         = 2
+countryName_max         = 2
+commonName              = Common Name (hostname, IP, or your name)
+commonName_max          = 64
+ 
+# Default values for the above, for consistency and less typing.
+# Variable name                  Value
+#------------------------        ------------------------------
+#0.organizationName_default     = My Company
+#organizationalUnitName_default = My Department
+#emailAddress_default           = mydepartment@mycompany.com
+#commonName_default             = My Company Certificate Service
+#localityName_default           = Besiktas
+#stateOrProvinceName_default    = Istanbul
+#countryName_default            = TR
+
+
+#########################################################################
+# The next few sections are extensions that can be applied when signing 
+# certificates. For example, passing the -extensions v3_ca command-line 
+# argument will apply the options set in [ v3_ca ].
+#########################################################################
+
+
+# ----------------------------------------------------------------------
+# We値l apply the v3_ca extension when we create the root certificate.
+#
+# Extensions for a typical CA (`man x509v3_config`).
+# ----------------------------------------------------------------------
+[ v3_ca ]
+basicConstraints               = critical, CA:true
+subjectKeyIdentifier           = hash
+authorityKeyIdentifier         = keyid:always,issuer
+keyUsage                       = critical, digitalSignature, cRLSign, keyCertSign
+
+
+# ----------------------------------------------------------------------
+# We値l apply the v3_ca_intermediate extension when we create the 
+# intermediate certificate. pathlen:0 ensures that there can be no 
+# further certificate authorities below the intermediate CA.
+#
+# Extensions for a typical intermediate CA (`man x509v3_config`).
+# ----------------------------------------------------------------------
+[ v3_intermediate_ca ]
+basicConstraints               = critical, CA:true, pathlen:0
+subjectKeyIdentifier           = hash
+authorityKeyIdentifier         = keyid:always,issuer
+keyUsage                       = critical, digitalSignature, cRLSign, keyCertSign
+
+
+# ----------------------------------------------------------------------
+# We値l apply the usr_cert extension when signing client certificates, 
+# such as those used for remote user authentication.
+#
+# Extensions for client certificates (`man x509v3_config`).
+# ----------------------------------------------------------------------
+[ usr_cert ]
+basicConstraints               = CA:false
+subjectKeyIdentifier           = hash
+authorityKeyIdentifier         = keyid,issuer
+keyUsage                       = critical, nonRepudiation, digitalSignature, keyEncipherment
+extendedKeyUsage               = clientAuth, emailProtection
+nsCertType                     = client, email
+nsComment                      = "OpenSSL Generated Client Certificate"
+
+
+# ----------------------------------------------------------------------
+# We値l apply the server_cert extension when signing server 
+# certificates, such as those used for web servers.
+#
+# subjectAltName is required by some of the recent browsers 
+# (http://wiki.cacert.org/FAQ/subjectAltName)
+#
+# Extensions for server certificates (`man x509v3_config`).
+# ----------------------------------------------------------------------
+[ server_cert ]
+basicConstraints               = CA:false
+subjectKeyIdentifier           = hash
+authorityKeyIdentifier         = keyid,issuer:always
+keyUsage                       = critical, digitalSignature, keyEncipherment
+extendedKeyUsage               = serverAuth
+nsCertType                     = server
+nsComment                      = "OpenSSL Generated Server Certificate"
+subjectAltName                 = @alt_names      
+
+[ alt_names ]
+DNS.1 = server1.mycompany.com
+DNS.2 = mail.mycompany.com
+DNS.3 = www.mycompany.com
+DNS.4 = www.sub.mycompany.com
+DNS.5 = mx.mycompany.com
+DNS.6 = support.mycompany.com
+
+
+# ----------------------------------------------------------------------
+# The crl_ext extension is automatically applied when creating 
+# certificate revocation lists.
+#
+# Extension for CRLs (`man x509v3_config`).
+# ----------------------------------------------------------------------
+[ crl_ext ]
+authorityKeyIdentifier         = keyid:always
+
+
+# ----------------------------------------------------------------------
+# We値l apply the ocsp extension when signing the Online Certificate 
+# Status Protocol (OCSP) certificate.
+#
+# Extension for OCSP signing certificates (`man ocsp`).
+# ----------------------------------------------------------------------
+[ ocsp ]
+basicConstraints               = CA:false
+subjectKeyIdentifier           = hash
+authorityKeyIdentifier         = keyid,issuer
+keyUsage                       = critical, digitalSignature
+extendedKeyUsage               = critical, OCSPSigning
+
+
+# ----------------------------------------------------------------------
+# The multipurpose_cert extention can be used for multipurpose 
+# certificate (server authentication, client authentication, code signing)
+# ----------------------------------------------------------------------
+[ multipurpose_cert ]
+basicConstraints               = CA:false
+subjectKeyIdentifier           = hash
+authorityKeyIdentifier         = keyid,issuer:always
+keyUsage                       = critical, digitalSignature, keyCertSign, cRLSign, keyEncipherment
+extendedKeyUsage               = serverAuth, clientAuth, codeSigning
+nsComment                      = "OpenSSL Generated Generic Certificate"
+subjectAltName                 = @alt_names
+
+[ alt_names ]
+DNS.1 = server1.mycompany.com
+DNS.2 = mail.mycompany.com
+DNS.3 = www.mycompany.com
+DNS.4 = www.sub.mycompany.com
+DNS.5 = mx.mycompany.com
+DNS.6 = support.mycompany.com
+
