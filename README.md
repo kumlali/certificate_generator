@@ -2,21 +2,25 @@
 Helper scripts to create CA and domain certificates by using OpenSSL and Java keytool
 
 It produces:
-* CA private key
-* CA certificate
-* Domain private key
-* Domain certificate
-* Domain PKCS12 keystore
-* Domain JKS keystore
+* CA private key(password protected): `ca/ca.key.pem`
+* CA certificate: `ca/ca.cert.pem`
+* Domain private key: `domain/domain.key.pem`
+  * We omited the password to prevent entering the password every time a web server(eg, Apache) started.
+* Domain certificate: `domain/domain.cert.pem`
+* Domain PKCS12 keystore(password protected): `domain/domain.p12`
+* Domain JKS keystore(password protected): `domain/domain.jks`
 
 # Usage
+
+For Linux `create_certs.sh`, for Windows `create_certs.bat` files contain `OPENSSL`, `KEYTOOL`, `PASSWORD` and `DOMAIN_ALIAS` variables. If default values of these variables do not match your needs, you have to update them. In most cases, you will need to change at least `PASSWORD`and `DOMAIN_ALIAS`.
+
 
 ## Linux
 * Clone the project: `git clone https://github.com/kumlali/certificate_generator.git`
 * Get into `certificate_generator/linux` directory: `cd certificate_generator/linux`
 * (Optional) Set `OPENSSL`, `KEYTOOL`, `PASSWORD` and `DOMAIN_ALIAS` variables in `create_certs.sh`
 * Give execute permission to `create_certs.sh`: `chmod +x create_certs.sh`
-* Execute `create_certs.sh`: `./create_certs.sh`
+* Execute `create_certs.sh`:
 
 ```bash
 [me@mycomputer linux]$ ./create_certs.sh
@@ -101,8 +105,9 @@ domain.cert.pem  domain.jks  domain.key.pem  domain.p12
 ## Windows
 
 * Clone the project: `git clone https://github.com/kumlali/certificate_generator.git`
-* (Optional) Set `OPENSSL`, `KEYTOOL`, `PASSWORD` and `DOMAIN_ALIAS` variables in `certificate_generator\windows\create_certs.bat`
-* Execute `certificate_generator\windows\create_certs.bat`
+* Get into `certificate_generator\windows` directory: `cd certificate_generator\windows`
+* (Optional) Set `OPENSSL`, `KEYTOOL`, `PASSWORD` and `DOMAIN_ALIAS` variables in `create_certs.bat`
+* Execute `create_certs.bat`:
 
 ```bat
 c:\certificate_generator\windows>create_certs.bat
