@@ -199,7 +199,7 @@ keyUsage                       = critical, digitalSignature, keyEncipherment
 extendedKeyUsage               = serverAuth
 nsCertType                     = server
 nsComment                      = "OpenSSL Generated Server Certificate"
-subjectAltName                 = @alt_names      
+subjectAltName                 = @alt_names
 
 [ alt_names ]
 DNS.1 = server1.mycompany.com
@@ -246,12 +246,3 @@ keyUsage                       = critical, digitalSignature, keyCertSign, cRLSig
 extendedKeyUsage               = serverAuth, clientAuth, codeSigning
 nsComment                      = "OpenSSL Generated Generic Certificate"
 subjectAltName                 = @alt_names
-
-[ alt_names ]
-DNS.1 = server1.mycompany.com
-DNS.2 = mail.mycompany.com
-DNS.3 = www.mycompany.com
-DNS.4 = www.sub.mycompany.com
-DNS.5 = mx.mycompany.com
-DNS.6 = support.mycompany.com
-

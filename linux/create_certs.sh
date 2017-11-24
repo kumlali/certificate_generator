@@ -21,7 +21,7 @@ KEYTOOL=keytool
 PASSWORD=pa$$wOrD
 
 # Alias for PKCS12 and JKS key store.
-DOMAIN_ALIAS="*.mycompany.com"
+DOMAIN_ALIAS=${RANDOM}
 
 
 # ------------------------------------------------------------------
@@ -55,7 +55,7 @@ ${OPENSSL} req -config openssl.cnf -new -sha256 -key domain/domain.key.pem -out 
 echo "---------------------------------------------------------------"
 echo "Domain: CSR is being signed with CA key..."
 echo "---------------------------------------------------------------"
-${OPENSSL} x509 -req -extfile openssl.cnf -extensions multipurpose_cert -days 18250 -set_serial ${RANDOM} -in domain/domain.csr.pem -passin pass:${PASSWORD} -CAkey ca/ca.key.pem -CA ca/ca.cert.pem -out domain/domain.cert.pem
+${OPENSSL} x509 -req -extfile openssl.cnf -extensions server_cert -days 18250 -set_serial ${RANDOM} -in domain/domain.csr.pem -passin pass:${PASSWORD} -CAkey ca/ca.key.pem -CA ca/ca.cert.pem -out domain/domain.cert.pem
 
 echo "---------------------------------------------------------------"
 echo "Domain: PKCS12 key store is being created..."

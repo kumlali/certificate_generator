@@ -22,7 +22,7 @@ rem The password to be used in all key & stores.
 set PASSWORD=pa$$wOrD
 
 rem Alias for PKCS12 and JKS key store.
-set DOMAIN_ALIAS="*.mycompany.com"
+set DOMAIN_ALIAS=%RANDOM%
 
 
 rem ------------------------------------------------------------------

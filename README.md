@@ -14,10 +14,12 @@ It produces:
 
 For Linux `create_certs.sh`, for Windows `create_certs.bat` files contain `OPENSSL`, `KEYTOOL`, `PASSWORD` and `DOMAIN_ALIAS` variables. If default values of these variables do not match your needs, you have to update them. In most cases, you will need to change at least `PASSWORD`and `DOMAIN_ALIAS`.
 
+You will also need to update `alt_names` in `openssl.cnf`
 
 ## Linux
 * Clone the project: `git clone https://github.com/kumlali/certificate_generator.git`
 * Get into `certificate_generator/linux` directory: `cd certificate_generator/linux`
+* Update `alt_names` in `openssl.cnf`
 * (Optional) Set `OPENSSL`, `KEYTOOL`, `PASSWORD` and `DOMAIN_ALIAS` variables in `create_certs.sh`
 * Give execute permission to `create_certs.sh`: `chmod +x create_certs.sh`
 * Execute `create_certs.sh`:
@@ -106,6 +108,7 @@ domain.cert.pem  domain.jks  domain.key.pem  domain.p12
 
 * Clone the project: `git clone https://github.com/kumlali/certificate_generator.git`
 * Get into `certificate_generator\windows` directory: `cd certificate_generator\windows`
+* Update `alt_names` in `openssl.cnf`
 * (Optional) Set `OPENSSL`, `KEYTOOL`, `PASSWORD` and `DOMAIN_ALIAS` variables in `create_certs.bat`
 * Execute `create_certs.bat`:
 
