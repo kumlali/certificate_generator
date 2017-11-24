@@ -56,13 +56,12 @@ echo ---------------------------------------------------------------
 echo ---------------------------------------------------------------
 echo Domain: CSR is being signed with CA key...
 echo ---------------------------------------------------------------
-%OPENSSL% x509 -req -extfile openssl.cnf -extensions multipurpose_cert -days 18250 -set_serial %RANDOM% -in domain\domain.csr.pem -passin pass:%PASSWORD% -CAkey ca\ca.key.pem -CA ca\ca.cert.pem -out domain\domain.cert.pem
+%OPENSSL% x509 -req -extfile openssl.cnf -extensions server_cert -days 18250 -set_serial %RANDOM% -in domain\domain.csr.pem -passin pass:%PASSWORD% -CAkey ca\ca.key.pem -CA ca\ca.cert.pem -out domain\domain.cert.pem
 
 echo ---------------------------------------------------------------
 echo Domain: PKCS12 key store is being created...
 echo ---------------------------------------------------------------
-rem %OPENSSL% pkcs12 -export -name %DOMAIN_ALIAS% -inkey domain\domain.key.pem -in domain\domain.cert.pem -passout pass:%PASSWORD% -out domain\domain.p12
-%OPENSSL% pkcs12 -export -inkey domain\domain.key.pem -in domain\domain.cert.pem -passout pass:%PASSWORD% -out domain\domain.p12
+%OPENSSL% pkcs12 -export -name %DOMAIN_ALIAS% -inkey domain\domain.key.pem -in domain\domain.cert.pem -passout pass:%PASSWORD% -out domain\domain.p12
 
 echo ---------------------------------------------------------------
 echo Domain: JKS key store is being created from PKCS12 key store...
